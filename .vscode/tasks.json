@@ -58,7 +58,7 @@
       {
           "label": "testspecific",
           "type": "shell",
-          "command": "cd build && cltester -v artifacts/test-eden_fractal.wasm ${input:testsuite} -s ",
+          "command": "cd build && cltester -v artifacts/test-cetf_contract.wasm ${input:testsuite} -s ",
           "args": [],
           "group": {
               "kind": "build",

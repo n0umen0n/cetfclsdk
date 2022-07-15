@@ -12,12 +12,12 @@
             "args": [
                 "-v",
                 "-s",
-                "artifacts/eden_fractal.wasm",
-                "artifacts/eden_fractal-debug.wasm",
+                "artifacts/cetf.wasm",
+                "artifacts/cetf-debug.wasm",
                 "-s",
                 "clsdk/contracts/token.wasm",
                 "clsdk/contracts/token-debug.wasm",
-                "artifacts/test-eden_fractal.wasm"
+                "artifacts/test-cetf.wasm"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",

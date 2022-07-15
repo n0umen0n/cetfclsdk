@@ -2,7 +2,7 @@
 
 #include <string_view>
 
-namespace eden_fractal {
+namespace cetf_contract {
     namespace errors {
         // Agreement-related
         constexpr std::string_view requiresAdmin = "Action requires admin authority. Admins: Dan Singjoy, Joshua Seymour, Chuck Macdonald.";
@@ -21,4 +21,4 @@ namespace eden_fractal {
         constexpr std::string_view group_too_large = "One of the groups is too large. Maximum group size = 6.";
 
     }  // namespace errors
-}  // namespace eden_fractal
+}  // namespace cetf_contract
