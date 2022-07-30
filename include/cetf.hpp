@@ -32,20 +32,23 @@ namespace cetf_contract {
        public:
         using eosio::contract::contract;
 
-        /* EXAMPLE
-        using AgreementSingleton = eosio::singleton<"agreement"_n, Agreement>;
-
-        // eosio.token tables
-        using accounts = eosio::multi_index<"accounts"_n, account>;
-        using stats = eosio::multi_index<"stat"_n, currency_stats>;
-
-        //
-*/
-
         //EOSIO.TOKEN TABLES
 
         using accounts = eosio::multi_index<"accounts"_n, account>;
         using stats = eosio::multi_index<"stat"_n, currency_stats>;
+
+        /* config singleton
+
+//Stores the fee percentage that gets charged while creating or puchasing EOSETF.
+        using refundratetb = eosio::singleton<"refundrate"_n, refundrate>;
+
+/Table stores the base token that is used to check the ratios when creation the EOSETF.
+        using basetoktab = eosio::singleton<"basetok"_n, basetok>;
+
+
+
+
+*/
 
         //EOSETF CREATION TABLES
 
@@ -53,7 +56,7 @@ namespace cetf_contract {
         using useritokans = eosio::multi_index<"usertokens"_n, usertokens>;
 
         //Stores the fee percentage that gets charged while creating or puchasing EOSETF.
-        using refundratetb = eosio::multi_index<"refundrate"_n, refundrate>;
+        using refundratetb = eosio::singleton<"refundrate"_n, refundrate>;
 
         //Table stores the base token that is used to check the ratios when creation the EOSETF.
         using basetoktab = eosio::singleton<"basetok"_n, basetok>;
@@ -62,6 +65,9 @@ namespace cetf_contract {
         token to the fund first it has to be added to this table. Contains key information of each token in the fund. 
         */
         using rebalontb = eosio::multi_index<"rebalon"_n, rebalon>;
+
+        //Stores info on whether the creation and redemption of EOSETF is paused.
+        using pausetab = eosio::singleton<"pauze"_n, pausetabla>;
 
         //STAKING TABLES and FEE CLAIMING TABLES
 
@@ -116,8 +122,23 @@ namespace cetf_contract {
         //Stores number of managers for the fund.
         using nrofmngtab = eosio::multi_index<"mngtab"_n, mngtab>;
 
-        //PAUSE EOSETF REDEMPTION AND CREATION TABLE
-        using pausetab = eosio::singleton<"pauze"_n, pausetabla>;
+        //TABLES USED IN VOTING FOR PORTFOLIO ALLOCATION
+
+        //Table for a poll
+        using portftb = eosio::multi_index<"portfolios"_n, portfolios, indexed_by<"bycomjus"_n, const_mem_fun<portfolios, uint64_t, &portfolios::get_secondary_1>>>;
+
+        //Stores info on who is fund manager
+        using approvedaccs = eosio::multi_index<"approvedaccs"_n, white>;
+
+        /* DELETE IF COMPILES portftb
+ typedef eosio::multi_index<"portfolios"_n, portfolios,
+  eosio::indexed_by<"bycomjus"_n, eosio::const_mem_fun<portfolios, uint64_t, &portfolios::by_secondary>>> portftb;
+*/
+
+        //TABLES OF OTHER CONTRACTS
+
+        //Defibox
+        using pairs = eosio::multi_index<"pairs"_n, pair>;
 
         cetf_contract(name receiver, name code, datastream<const char*> ds);
 
