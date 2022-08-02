@@ -224,6 +224,50 @@ void deltokoncet(symbol sym)
       rebaltab.erase(existing);
 }
 
+//POSSIBILITY TO PAUSE CREATION AND REDEMPTION IN CASE OF BUG / EMERGENCY
+void pause(bool ispaused)
+{
+    require_auth(_self);
+
+    pausetab pausetable(_self, _self.value);
+    pausetabla soloiter;
+    if (!pausetable.exists()) {
+        pausetable.set(soloiter, _self);
+    }
+    else {
+        soloiter = pausetable.get();
+    }
+    soloiter.ispaused = ispaused;
+    pausetable.set(soloiter, _self);
+}
+
+//SAVES NEW TOKEN BALANCE (USED IN NEXT REBALANCING)
+void adjusttok(name contract, symbol token, int64_t decimals, double tokenpercnew)
+{
+    require_auth(_self);
+
+    //KUI KÕIK SOLD SIIS TA FJUKOF KUNA SEE L2heb nulli ehk siis ei saa querida midagi.
+
+    rebalontb rebaltab(get_self(), _self.value);
+    auto iterkolm = rebaltab.find( token.code().raw() );
+
+    if (tokenpercnew != 0) {
+        accounts from_acnts(contract, _self.value);
+        const auto& from = from_acnts.get(token.code().raw(), "Fjukof");
+
+        //NO need for double actually, UINT would be more precise.
+        double afterbuyingamt = static_cast<double>(from.balance.amount) / decimals;
+
+        rebaltab.modify(
+            iterkolm, name("consortiumtt"), [&]( auto& s ) {               s.tokeninfund    = afterbuyingamt; });
+    }
+
+    else {
+        rebaltab.modify(
+            iterkolm, name("consortiumtt"), [&]( auto& s ) {               s.tokeninfund    = 0; });
+    }
+}
+
 /*
 void cetf_contract::validate_symbol(const symbol& symbol)
 {

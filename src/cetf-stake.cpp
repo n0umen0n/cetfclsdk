@@ -160,6 +160,54 @@ void unstakecetf(name user, vector<asset> quantity, vector<uint64_t> id, name
     }
 }
 
+void unstakeetf(name user, vector<asset> quantity, vector<uint64_t> id, name clmspecifier)
+
+{
+    require_auth(user);
+
+    check(clmspecifier == "cetfcetfcetf"_n, "Wrong claiming specifier");
+    claimtimetb claimtab(_self, clmspecifier.value);
+    const auto& claimiter = claimtab.get(user.value, "Claim at least once to unstake.");
+
+    divperiod_def divpertb(_self, _self.value);
+    divperiod divperiter;
+    divperiter = divpertb.get();
+
+    check(claimiter.claimperiod != divperiter.claimperiod, "Please don't claim next period, then you will be able to unstake.");
+
+    for (int i = 0; i < quantity.size(); i++) {
+        indstkdetftb personstktbl(_self, user.value);
+
+        auto userrow = personstktbl.find(id[i]);
+
+        const auto & iterone = personstktbl.get(id[i], "No such staking ID(1)." );
+
+        check(iterone.staked.amount >= quantity[i].amount, "Unstaking too much BOXAUJ.");
+
+        personstktbl.modify(
+            userrow, name("consortiumtt"), [&]( auto& s ) {
+                s.staked.amount -= quantity[i].amount;
+                   
+            });
+
+        send("consortiumtt"_n, user, quantity[i], "Returning LP tokens", "lptoken.defi"_n);
+
+        const auto & itertwo = personstktbl.get(id[i], "No such staking ID(2)." );
+
+        if (itertwo.staked.amount == 0) {
+            personstktbl.erase(userrow);
+        }
+
+        totstk_def totalstktbl(_self, _self.value);
+        totstk newstats;
+
+        newstats = totalstktbl.get();
+
+        newstats.totstketf.amount -= quantity[i].amount;
+        totalstktbl.set(newstats, _self);
+    }
+}
+
 /*
 void cetf_contract::validate_symbol(const symbol& symbol)
 {
