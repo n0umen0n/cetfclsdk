@@ -241,6 +241,17 @@ void pause(bool ispaused)
     pausetable.set(soloiter, _self);
 }
 
+//Private function that checks whether creation and redemption if EOESETF is currently halted.
+void pauseornot()
+{
+    pausetab pauztab(_self, _self.value);
+    pausetabla iter;
+
+    iter = pauztab.get();
+    //0 means pause.
+    check(iter.ispaused, "Creation and redemption is currently halted.");
+}
+
 //SAVES NEW TOKEN BALANCE (USED IN NEXT REBALANCING)
 void adjusttok(name contract, symbol token, int64_t decimals, double tokenpercnew)
 {
@@ -268,38 +279,31 @@ void adjusttok(name contract, symbol token, int64_t decimals, double tokenpercne
     }
 }
 
-/*
-void cetf_contract::validate_symbol(const symbol& symbol)
+void createetf(name from, asset reward)
 {
-    check(symbol.value == eden_symbol.value, "invalid symbol");
-    check(symbol == eden_symbol, "symbol precision mismatch");
-}
+    action(permission_level{get_self(), "active"_n}, "consortiumtt"_n, "issuetoken"_n, std::make_tuple(from, reward)).send();
+};
 
-void cetf_contract::validate_quantity(const asset& quantity)
+void send(name from, name to, asset quantity, std::string memo, name contract)
 {
-    check(quantity.is_valid(), "invalid quantity");
-    check(quantity.amount > 0, "quantity must be positive");
-}
+    action(permission_level{get_self(), "active"_n}, contract, "transfer"_n, std::make_tuple(from, to, quantity, memo)).send();
+};
 
-void cetf_contract::validate_memo(const string& memo)
+void adjusttokk(name contract, symbol token, int64_t decimals, double tokenpercnew)
 {
-    check(memo.size() <= 256, "memo has more than 256 bytes");
-}
+    action(permission_level{get_self(), "active"_n}, _self, "adjusttok"_n, std::make_tuple(contract, token, decimals, tokenpercnew)).send();
+};
 
-void cetf_contract::require_admin_auth()
+void rebalancetwoin(vector<symbol> answers)
 {
-    bool hasAuth = std::any_of(admins.begin(), admins.end(), [](auto& admin) { return has_auth(admin); });
-    check(hasAuth, requiresAdmin.data());
+    action(permission_level{get_self(), "active"_n}, _self, "rebalancetwo"_n, std::make_tuple(answers)).send();
+};
 }
+;
 
-EOSIO_ACTION_DISPATCHER(cetf_contract::actions)
-*/
-// clang-format off
-EOSIO_ABIGEN(actions(cetf_contract::actions), 
-    table("agreement"_n, cetf_contract::Agreement), 
-    table("signatures"_n, cetf_contract::Signature),
+EOSIO_ABIGEN(actions(cetf_contract::actions),
+             table("agreement"_n, cetf_contract::Agreement),
+             table("signatures"_n, cetf_contract::Signature),
 
-
-    ricardian_clause("Fractal contract ricardian clause", cetf_contract::ricardian_clause)
-)
+             ricardian_clause("Fractal contract ricardian clause", cetf_contract::ricardian_clause))
 // clang-format on

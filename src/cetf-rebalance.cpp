@@ -464,3 +464,36 @@ rebalontb vasaktb(get_self(), _self.value);
 //END LOOP TO GET THE SIZE *NUBMBER OF TOKENS IS THE FUND
 }
 //REBALANCE FUNCTION END
+
+[[eosio::action]] void votersnulli(name community, uint64_t pollkey)
+
+{
+    require_auth("consortiumtt"_n);
+
+    kysimustes pollstbl(_self, community.value);
+    //portftb pollstbl(_self, community.value);
+    auto pollsrow = pollstbl.find(pollkey);
+
+    pollstbl.modify(pollsrow, _self, [&](auto& contract) {
+        contract.nrofvoters = 0;
+        contract.sumofallopt = 0;
+    });
+
+    auto& pede = pollstbl.get(pollkey, "k2ivittupede");
+
+    for (size_t i = 0; i < pede.totalvote.size(); ++i) {
+        pollstbl.modify(pollsrow, _self, [&](auto& contract) { contract.totalvote[i] = 0; });
+    }
+    approvedaccs whitetbl(_self, community.value);
+
+   for (auto iter =whitetbl.begin(); iter !=whitetbl.end(); iter++)
+{
+    kasutajapolzs userstbl(_self, iter->accounts.value);
+    const auto& usersrow = userstbl.find(pollkey);
+
+    //
+    if (usersrow != userstbl.end()) {
+        userstbl.erase(usersrow);
+    }
+}
+}
